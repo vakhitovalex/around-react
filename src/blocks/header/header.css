@@ -1,0 +1,11 @@
+@import url(./__image/header__image.css);
+
+.header {
+  border-bottom: 1px solid rgba(84, 84, 84, 0.7);
+}
+
+@media screen and (max-width:350px) {
+  .header {
+    margin: 0 -20px;
+  }
+}
