@@ -25,6 +25,11 @@ function App() {
     setAddPlaceModalOpen(true);
   }
 
+  function closeAllModals () {
+    setEditAvatarModalOpen(false);
+    setEditProfileModalOpen(false);
+    setAddPlaceModalOpen(false);
+  }
 
   return (
       <body className="page">
@@ -36,17 +41,17 @@ function App() {
             onAddPlace = {handleAddPlaceClick}
           />
           <Footer/>
-          <PopupWithForm name='edit-profile' title='Edit profile' isOpen = {isEditProfileModalOpen} >
+          <PopupWithForm name='edit-profile' title='Edit profile' isOpen = {isEditProfileModalOpen} onClose = {closeAllModals} >
             <input id="profile-name" type="text" className="form__input form__input_type_profile-name" value="" placeholder="Name" required minLength="2" maxLength="40" name="profileName" />
             <span id="profile-name-error" className="form__error"></span>
             <input id="profile-info" type="text" className="form__input form__input_type_profile-description" value="" placeholder="Description" required minLength="2" maxLength="200" name="profileAbout" />
             <span id="profile-info-error" className="form__error"></span>
           </PopupWithForm>
-          <PopupWithForm name='edit-profile-picture' title='Change profile picture' isOpen = {isEditAvatarModalOpen}>
+          <PopupWithForm name='edit-profile-picture' title='Change profile picture' isOpen = {isEditAvatarModalOpen} onClose = {closeAllModals}>
             <input id="picture-url" type="url" className="form__input form__input_type_picture-link" value="" placeholder="Picture Link" name="pictureLink" required/>
             <span id="picture-url-error" className="form__error"></span>
           </PopupWithForm>
-          <PopupWithForm name='add-place' title='New place' isOpen = {isAddPlaceModalOpen}>
+          <PopupWithForm name='add-place' title='New place' isOpen = {isAddPlaceModalOpen} onClose = {closeAllModals}>
             <input id="place-title" type="text" className="form__input form__input_type_place-title" value="" placeholder="Title" minLength="1" maxLength="30" name="placeTitle" required/>
             <span id="place-title-error" className="form__error"></span>
             <input id="place-url" type="url" className="form__input form__input_type_place-link" value="" placeholder="Image Link" name="placeLink" required/>
