@@ -31,7 +31,6 @@ function Main(props) {
   useEffect(() => {
       api.getInitialCards()
       .then(res => {
-        // console.log(res);
         setCardsData(res.map(card => ({
           apiTitle : card.name,
           apiLink : card.link,

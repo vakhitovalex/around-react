@@ -1,6 +1,5 @@
 function ImagePopup (props) {
 
-  console.log('11'+props.imageTitle);
   return (
     <div className={`modal modal_type_image ${props.isOpen ? 'modal_open' : '' }`}>
       <div className="modal__image-container">

@@ -5,7 +5,6 @@ function Card(props) {
 
   function handleClick () {
     props.onCardClick(props.card);
-    console.log('12345gl');
   }
 
   return (
