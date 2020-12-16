@@ -13,10 +13,12 @@ function App() {
   const [isEditProfileModalOpen, setEditProfileModalOpen] = useState(false);
   const [isAddPlaceModalOpen, setAddPlaceModalOpen] = useState(false);
   const [isEditAvatarModalOpen, setEditAvatarModalOpen] = useState(false);
-  const [{cardImage, cardName}, setCardData] = useState('');
+  const [{cardName, cardImage}, setCardData] = useState('');
+  const [isImageModalOpen, setImageModalOpen] = useState(false);
 
-  function handleCardClick (cardImage, cardName) {
-    setCardData ({cardImage, cardName})
+  function handleCardClick (cardName, cardImage) {
+    setImageModalOpen(true);
+    setCardData ({cardName, cardImage});
   }
 
   function handleEditAvatarClick () {
@@ -35,7 +37,7 @@ function App() {
     setEditAvatarModalOpen(false);
     setEditProfileModalOpen(false);
     setAddPlaceModalOpen(false);
-    // handleCardClick (false);
+    setImageModalOpen (false);
   }
 
   return (
@@ -46,6 +48,7 @@ function App() {
             onEditAvatar = {handleEditAvatarClick}
             onEditProfile = {handleEditProfileClick}
             onAddPlace = {handleAddPlaceClick}
+            onCardClick = {handleCardClick}
           />
           <Footer/>
           <PopupWithForm name='edit-profile' title='Edit profile' isOpen = {isEditProfileModalOpen} onClose = {closeAllModals} >
@@ -67,7 +70,8 @@ function App() {
           <PopupWithForm name='delete-place' title='Are you sure?'>
           </PopupWithForm>
           <ImagePopup
-            imageURL = {cardImage}
+            isOpen = {isImageModalOpen}
+            imageUrl = {cardImage}
             imageTitle = {cardName}
             onClose = {closeAllModals}
           />

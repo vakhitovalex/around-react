@@ -69,8 +69,8 @@ function Main(props) {
                 cardLikes = {card.apiLikesCount}
                 cardOwner = {card.apiCardOwner}
                 currentUser = {userId}
-
-              />
+                onCardClick = {() => props.onCardClick(card.apiTitle, card.apiLink)}
+                />
             )
           }
       </section>
