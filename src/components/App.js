@@ -13,7 +13,7 @@ function App() {
   const [isEditProfileModalOpen, setEditProfileModalOpen] = useState(false);
   const [isAddPlaceModalOpen, setAddPlaceModalOpen] = useState(false);
   const [isEditAvatarModalOpen, setEditAvatarModalOpen] = useState(false);
-  const [{cardName, cardImage}, setCardData] = useState('');
+  const [{cardName, cardImage}, setCardData] = useState({});
   const [isImageModalOpen, setImageModalOpen] = useState(false);
 
   function handleCardClick (cardName, cardImage) {

@@ -13,31 +13,39 @@ const api = new Api({
 
 function Main(props) {
 
-  const [userName, setUserName] = useState();
-  const [userId, setUserId] = useState();
-  useEffect(() => {
-    api.getUserInfo()
-    .then((res) => {
-      setUserName (res.name)
-      setUserDescritpion (res.about)
-      setUserAvatar (res.avatar)
-      setUserId(res._id)
-    })
-  });
-
-  const [userDescription, setUserDescritpion] = useState();
-  const [userAvatar, setUserAvatar] = useState();
+  const [userName, setUserName] = useState('');
+  const [userId, setUserId] = useState('');
+  const [userDescription, setUserDescritpion] = useState('');
+  const [userAvatar, setUserAvatar] = useState('');
   const [defaultCards, setCardsData] = useState([]);
+
+
   useEffect(() => {
-      api.getInitialCards()
+      api.getUserInfo()
       .then(res => {
-        setCardsData(res.map(card => ({
-          apiTitle : card.name,
-          apiLink : card.link,
-          apiLikesCount : card.likes.length,
-          apiCardOwner : card.owner._id
+        setUserName (res.name)
+        setUserDescritpion (res.about)
+        setUserAvatar (res.avatar)
+        setUserId(res._id)
+      })
+      .catch(err => {
+        console.log(err+ ' in user info request');
+      })
+      .then(() => {
+        api.getInitialCards()
+        .then(res => {
+          setCardsData(res.map(card => ({
+            apiTitle : card.name,
+            apiLink : card.link,
+            apiLikesCount : card.likes.length,
+            apiCardOwner : card.owner._id,
+            apiId: card._id
+          })
+          ))
         })
-        ))
+        .catch(err => {
+          console.log(err + ' in cards request');
+        })
       })
   }, []);
 
@@ -63,6 +71,7 @@ function Main(props) {
           {
             defaultCards.map(card =>
               <Card
+                key = {card.apiId}
                 cardName = {card.apiTitle}
                 cardImage = {card.apiLink}
                 cardLikes = {card.apiLikesCount}
