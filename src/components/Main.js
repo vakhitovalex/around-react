@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import Api from '../utils/Api.js';
-import Card from './Card.js'
+import React, { useState, useEffect } from "react";
+import Api from "../utils/Api.js";
+import Card from "./Card.js";
 
 const api = new Api({
   baseUrl: "https://around.nomoreparties.co/v1/group-6",
@@ -10,79 +10,87 @@ const api = new Api({
   },
 });
 
-
 function Main(props) {
-
-  const [userName, setUserName] = useState('');
-  const [userId, setUserId] = useState('');
-  const [userDescription, setUserDescritpion] = useState('');
-  const [userAvatar, setUserAvatar] = useState('');
+  const [userName, setUserName] = useState("");
+  const [userId, setUserId] = useState("");
+  const [userDescription, setUserDescritpion] = useState("");
+  const [userAvatar, setUserAvatar] = useState("");
   const [defaultCards, setCardsData] = useState([]);
 
-
   useEffect(() => {
-      api.getUserInfo()
-      .then(res => {
-        setUserName (res.name)
-        setUserDescritpion (res.about)
-        setUserAvatar (res.avatar)
-        setUserId(res._id)
+    api
+      .getUserInfo()
+      .then((res) => {
+        setUserName(res.name);
+        setUserDescritpion(res.about);
+        setUserAvatar(res.avatar);
+        setUserId(res._id);
       })
-      .catch(err => {
-        console.log(err+ ' in user info request');
+      .catch((err) => {
+        console.log(err + " in user info request");
       })
       .then(() => {
-        api.getInitialCards()
-        .then(res => {
-          setCardsData(res.map(card => ({
-            apiTitle : card.name,
-            apiLink : card.link,
-            apiLikesCount : card.likes.length,
-            apiCardOwner : card.owner._id,
-            apiId: card._id
+        api
+          .getInitialCards()
+          .then((res) => {
+            setCardsData(
+              res.map((card) => ({
+                apiTitle: card.name,
+                apiLink: card.link,
+                apiLikesCount: card.likes.length,
+                apiCardOwner: card.owner._id,
+                apiId: card._id,
+              }))
+            );
           })
-          ))
-        })
-        .catch(err => {
-          console.log(err + ' in cards request');
-        })
-      })
+          .catch((err) => {
+            console.log(err + " in cards request");
+          });
+      });
   }, []);
 
   return (
     <main className="content">
       <section className="profile">
         <div className="profile__current">
-          <button className="profile__picture-edit" onClick={props.onEditAvatar}>
+          <button
+            className="profile__picture-edit"
+            onClick={props.onEditAvatar}
+          >
             <img src={userAvatar} alt={userName} className="profile__picture" />
           </button>
           <div className="profile__info">
             <div className="profile__head">
               <h1 className="profile__name">{userName}</h1>
-              <button type="button" className="profile__edit" onClick={props.onEditProfile }></button>
+              <button
+                type="button"
+                className="profile__edit"
+                onClick={props.onEditProfile}
+              ></button>
             </div>
             <p className="profile__about">{userDescription}</p>
           </div>
         </div>
-        <button type="button" className="profile__add" onClick={props.onAddPlace}></button>
+        <button
+          type="button"
+          className="profile__add"
+          onClick={props.onAddPlace}
+        ></button>
       </section>
 
       <section className="elements">
-          {
-            defaultCards.map(card =>
-              <Card
-                key = {card.apiId}
-                cardName = {card.apiTitle}
-                cardImage = {card.apiLink}
-                cardLikes = {card.apiLikesCount}
-                cardOwner = {card.apiCardOwner}
-                currentUser = {userId}
-                onCardClick = {() => props.onCardClick(card.apiTitle, card.apiLink)}
-                />
-            )
-          }
+        {defaultCards.map((card) => (
+          <Card
+            key={card.apiId}
+            cardName={card.apiTitle}
+            cardImage={card.apiLink}
+            cardLikes={card.apiLikesCount}
+            cardOwner={card.apiCardOwner}
+            currentUser={userId}
+            onCardClick={() => props.onCardClick(card.apiTitle, card.apiLink)}
+          />
+        ))}
       </section>
-
     </main>
   );
 }
