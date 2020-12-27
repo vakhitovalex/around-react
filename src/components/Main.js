@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Api from "../utils/Api.js";
 import Card from "./Card.js";
+import { CurrentUserContext } from '../contexts/CurrentUserContext.js'
+
 
 const api = new Api({
   baseUrl: "https://around.nomoreparties.co/v1/group-6",
@@ -11,87 +13,80 @@ const api = new Api({
 });
 
 function Main(props) {
-  const [userName, setUserName] = useState("");
-  const [userId, setUserId] = useState("");
-  const [userDescription, setUserDescritpion] = useState("");
-  const [userAvatar, setUserAvatar] = useState("");
-  const [defaultCards, setCardsData] = useState([]);
+  const currentUser = useContext(CurrentUserContext);
+  const [cards, setCards] = useState([]);
 
-  useEffect(() => {
+  function requestCards() {
     api
-      .getUserInfo()
+      .getInitialCards()
       .then((res) => {
-        setUserName(res.name);
-        setUserDescritpion(res.about);
-        setUserAvatar(res.avatar);
-        setUserId(res._id);
+        setCards(res);
       })
       .catch((err) => {
-        console.log(err + " in user info request");
-      })
-      .then(() => {
-        api
-          .getInitialCards()
-          .then((res) => {
-            setCardsData(
-              res.map((card) => ({
-                apiTitle: card.name,
-                apiLink: card.link,
-                apiLikesCount: card.likes.length,
-                apiCardOwner: card.owner._id,
-                apiId: card._id,
-              }))
-            );
-          })
-          .catch((err) => {
-            console.log(err + " in cards request");
-          });
+        console.log(err + " in cards request");
       });
+  }
+
+  useEffect(() => {
+    requestCards();
   }, []);
 
-  return (
-    <main className="content">
-      <section className="profile">
-        <div className="profile__current">
-          <button
-            className="profile__picture-edit"
-            onClick={props.onEditAvatar}
-          >
-            <img src={userAvatar} alt={userName} className="profile__picture" />
-          </button>
-          <div className="profile__info">
-            <div className="profile__head">
-              <h1 className="profile__name">{userName}</h1>
-              <button
-                type="button"
-                className="profile__edit"
-                onClick={props.onEditProfile}
-              ></button>
-            </div>
-            <p className="profile__about">{userDescription}</p>
-          </div>
-        </div>
-        <button
-          type="button"
-          className="profile__add"
-          onClick={props.onAddPlace}
-        ></button>
-      </section>
+  function handleCardLike(card) {
+    // Check one more time if this card was already liked
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
 
-      <section className="elements">
-        {defaultCards.map((card) => (
-          <Card
-            key={card.apiId}
-            cardName={card.apiTitle}
-            cardImage={card.apiLink}
-            cardLikes={card.apiLikesCount}
-            cardOwner={card.apiCardOwner}
-            currentUser={userId}
-            onCardClick={() => props.onCardClick(card.apiTitle, card.apiLink)}
-          />
-        ))}
-      </section>
-    </main>
+    // Send a request to the API and getting the updated card data
+    api.changeLikeStatus(card._id, !isLiked)
+      .then((newCard) => {
+        // Create a new array based on the existing one and putting a new card into it
+        const newCards = cards.map((c) => c._id === card._id ? newCard : c);
+        // Update the state
+        setCards(newCards);
+      });
+  }
+
+  return (
+    <CurrentUserContext.Provider value={currentUser}>
+      <main className="content">
+        <section className="profile">
+          <div className="profile__current">
+            <button
+              className="profile__picture-edit"
+              onClick={props.onEditAvatar}
+            >
+              <img src={currentUser.avatar} alt={currentUser.name} className="profile__picture" />
+            </button>
+            <div className="profile__info">
+              <div className="profile__head">
+                <h1 className="profile__name">{currentUser.name}</h1>
+                <button
+                  type="button"
+                  className="profile__edit"
+                  onClick={props.onEditProfile}
+                ></button>
+              </div>
+              <p className="profile__about">{currentUser.about}</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="profile__add"
+            onClick={props.onAddPlace}
+          ></button>
+        </section>
+
+        <section className="elements">
+          {cards.map((card) => (
+            <Card
+              key={card._id}
+              card={card}
+              onClick={props.onCardClick}
+              onCardLike={handleCardLike}
+            />
+          ))}
+        </section>
+      </main>
+    </CurrentUserContext.Provider>
   );
 }
 

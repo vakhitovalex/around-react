@@ -19,7 +19,6 @@ class Api {
     })
       .then((res) =>
         res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)
-
       );
   }
 
@@ -103,5 +102,6 @@ class Api {
       );
   }
 }
+
 
 export default Api;
