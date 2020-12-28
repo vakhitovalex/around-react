@@ -15,7 +15,7 @@ function Card(props) {
   return (
     <div className="element">
       {
-        owner._id === currentUser._id && <button type='submit' className='element__delete'></button>
+        owner._id === currentUser._id && <button type='submit' className='element__delete' onClick={() => props.onCardDelete(props.card)}></button>
       }
 
       <div

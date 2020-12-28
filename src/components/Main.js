@@ -39,10 +39,18 @@ function Main(props) {
     api.changeLikeStatus(card._id, !isLiked)
       .then((newCard) => {
         // Create a new array based on the existing one and putting a new card into it
-        const newCards = cards.map((c) => c._id === card._id ? newCard : c);
+        const newCards = cards.map((item) => item._id === card._id ? newCard : item);
         // Update the state
         setCards(newCards);
       });
+  }
+
+  function handleCardDelete(card) {
+    api.deleteCard(card._id)
+    .then(() => {
+      const arrayWithoutDeletedCard = cards.filter((item) => item._id !== card._id);
+      setCards(arrayWithoutDeletedCard);
+    })
   }
 
   return (
@@ -82,6 +90,7 @@ function Main(props) {
               card={card}
               onClick={props.onCardClick}
               onCardLike={handleCardLike}
+              onCardDelete={handleCardDelete}
             />
           ))}
         </section>
