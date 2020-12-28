@@ -6,47 +6,46 @@ function Main(props) {
   const currentUser = useContext(CurrentUserContext);
 
   return (
-    <CurrentUserContext.Provider value={currentUser}>
-      <main className="content">
-        <section className="profile">
-          <div className="profile__current">
-            <button
-              className="profile__picture-edit"
-              onClick={props.onEditAvatar}
-            >
-              <img src={currentUser.avatar} alt={currentUser.name} className="profile__picture" />
-            </button>
-            <div className="profile__info">
-              <div className="profile__head">
-                <h1 className="profile__name">{currentUser.name}</h1>
-                <button
-                  type="button"
-                  className="profile__edit"
-                  onClick={props.onEditProfile}
-                ></button>
-              </div>
-              <p className="profile__about">{currentUser.about}</p>
-            </div>
-          </div>
+
+    <main className="content">
+      <section className="profile">
+        <div className="profile__current">
           <button
-            type="button"
-            className="profile__add"
-            onClick={props.onAddPlace}
-          ></button>
-        </section>
-        <section className="elements">
-          {props.cards.map((card) => (
-            <Card
-              key={card._id}
-              card={card}
-              onClick={props.onCardClick}
-              onCardLike={props.onCardLike}
-              onCardDelete={props.onCardDelete}
-            />
-          ))}
-        </section>
-      </main>
-    </CurrentUserContext.Provider>
+            className="profile__picture-edit"
+            onClick={props.onEditAvatar}
+          >
+            <img src={currentUser.avatar} alt={currentUser.name} className="profile__picture" />
+          </button>
+          <div className="profile__info">
+            <div className="profile__head">
+              <h1 className="profile__name">{currentUser.name}</h1>
+              <button
+                type="button"
+                className="profile__edit"
+                onClick={props.onEditProfile}
+              ></button>
+            </div>
+            <p className="profile__about">{currentUser.about}</p>
+          </div>
+        </div>
+        <button
+          type="button"
+          className="profile__add"
+          onClick={props.onAddPlace}
+        ></button>
+      </section>
+      <section className="elements">
+        {props.cards.map((card) => (
+          <Card
+            key={card._id}
+            card={card}
+            onClick={props.onCardClick}
+            onCardLike={props.onCardLike}
+            onCardDelete={props.onCardDelete}
+          />
+        ))}
+      </section>
+    </main>
   );
 }
 

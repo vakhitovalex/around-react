@@ -30,9 +30,9 @@ function AddPlacePopup(props) {
       onClose={props.onClose}
       onSubmit={handleSubmit}
     >
-      <input id="place-title" type="text" value={cardTitle} onChange={handleCardTitleChange} className="form__input form__input_type_place-title" defaultValue="" placeholder="Title" minLength="1" maxLength="30" name="placeTitle" required />
+      <input id="place-title" type="text" value={cardTitle} onChange={handleCardTitleChange} className="form__input form__input_type_place-title" placeholder="Title" minLength="1" maxLength="30" name="placeTitle" required />
       <span id="place-title-error" className="form__error"></span>
-      <input id="place-url" type="url" value={cardImageLink} onChange={handleCardImageLinkChange} className="form__input form__input_type_place-link" defaultValue="" placeholder="Image Link" name="placeLink" required />
+      <input id="place-url" type="url" value={cardImageLink} onChange={handleCardImageLinkChange} className="form__input form__input_type_place-link" placeholder="Image Link" name="placeLink" required />
       <span id="place-url-error" className="form__error"></span>
     </PopupWithForm>
   )

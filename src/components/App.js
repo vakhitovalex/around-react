@@ -13,11 +13,11 @@ import AddPlacePopup from './AddPlacePopup';
 function App(props) {
   const [currentUser, setCurrentUser] = useState('');
   const [cards, setCards] = useState([]);
-  const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
-  const [isAddPlaceModalOpen, setAddPlaceModalOpen] = useState(false);
-  const [isEditAvatarModalOpen, setEditAvatarModalOpen] = useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
+  const [isAddPlaceModalOpen, setIsAddPlaceModalOpen] = useState(false);
+  const [isEditAvatarModalOpen, setIsEditAvatarModalOpen] = useState(false);
   const [{ cardName, cardImage }, setCardData] = useState({});
-  const [isImageModalOpen, setImageModalOpen] = useState(false);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   function requestUserInfo() {
     api
@@ -83,27 +83,27 @@ function App(props) {
 
 
   function handleCardClick(cardName, cardImage) {
-    setImageModalOpen(true);
+    setIsImageModalOpen(true);
     setCardData({ cardName, cardImage });
   }
 
   function handleEditAvatarClick() {
-    setEditAvatarModalOpen(true);
+    setIsEditAvatarModalOpen(true);
   }
 
   function handleEditProfileClick() {
-    setEditProfilePopupOpen(true);
+    setIsEditProfilePopupOpen(true);
   }
 
   function handleAddPlaceClick() {
-    setAddPlaceModalOpen(true);
+    setIsAddPlaceModalOpen(true);
   }
 
   function closeAllModals() {
-    setEditAvatarModalOpen(false);
-    setEditProfilePopupOpen(false);
-    setAddPlaceModalOpen(false);
-    setImageModalOpen(false);
+    setIsEditAvatarModalOpen(false);
+    setIsEditProfilePopupOpen(false);
+    setIsAddPlaceModalOpen(false);
+    setIsImageModalOpen(false);
   }
 
   function handleUpdateUser({ name, about }) {
