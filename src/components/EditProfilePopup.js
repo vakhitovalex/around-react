@@ -19,7 +19,6 @@ function EditProfilePopup(props) {
   function handleSubmit(e) {
     // Prevent the browser from navigating to the form address
     e.preventDefault();
-
     // Pass the values of the managed components to the external handler
     props.onUpdateUser({
       name,
@@ -46,7 +45,6 @@ function EditProfilePopup(props) {
       <span id="profile-info-error" className="form__error"></span>
     </PopupWithForm>
   )
-
 }
 
 export default EditProfilePopup;
