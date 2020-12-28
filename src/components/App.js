@@ -19,6 +19,46 @@ const api = new Api({
 
 function App(props) {
   const [currentUser, setCurrentUser] = useState('');
+  const [cards, setCards] = useState([]);
+
+  function requestCards() {
+    api
+      .getInitialCards()
+      .then((res) => {
+        setCards(res);
+      })
+      .catch((err) => {
+        console.log(err + " in cards request");
+      });
+  }
+
+  useEffect(() => {
+    requestCards();
+  }, []);
+
+  function handleCardLike(card) {
+    // Check one more time if this card was already liked
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+
+    // Send a request to the API and getting the updated card data
+    api.changeLikeStatus(card._id, !isLiked)
+      .then((newCard) => {
+        // Create a new array based on the existing one and putting a new card into it
+        const newCards = cards.map((item) => item._id === card._id ? newCard : item);
+        // Update the state
+        setCards(newCards);
+      });
+  }
+
+  function handleCardDelete(card) {
+    api.deleteCard(card._id)
+      .then(() => {
+        const arrayWithoutDeletedCard = cards.filter((item) => item._id !== card._id);
+        setCards(arrayWithoutDeletedCard);
+      })
+  }
+
+
 
   function requestUserInfo() {
     api
@@ -92,6 +132,9 @@ function App(props) {
             onEditProfile={handleEditProfileClick}
             onAddPlace={handleAddPlaceClick}
             onCardClick={handleCardClick}
+            onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
+            cards={cards}
           />
           <Footer />
           <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllModals} onUpdateUser={handleUpdateUser} />
