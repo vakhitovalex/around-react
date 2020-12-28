@@ -4,6 +4,7 @@ import Main from './Main.js'
 import Footer from './Footer.js'
 import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from './ImagePopup.js';
+import EditProfilePopup from './EditProfilePopup.js'
 import Api from "../utils/Api.js";
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
@@ -37,7 +38,7 @@ function App(props) {
     requestUserInfo();
   }, []);
 
-  const [isEditProfileModalOpen, setEditProfileModalOpen] = useState(false);
+  const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
   const [isAddPlaceModalOpen, setAddPlaceModalOpen] = useState(false);
   const [isEditAvatarModalOpen, setEditAvatarModalOpen] = useState(false);
   const [{ cardName, cardImage }, setCardData] = useState({});
@@ -54,7 +55,7 @@ function App(props) {
   }
 
   function handleEditProfileClick() {
-    setEditProfileModalOpen(true);
+    setEditProfilePopupOpen(true);
   }
 
   function handleAddPlaceClick() {
@@ -63,7 +64,7 @@ function App(props) {
 
   function closeAllModals() {
     setEditAvatarModalOpen(false);
-    setEditProfileModalOpen(false);
+    setEditProfilePopupOpen(false);
     setAddPlaceModalOpen(false);
     setImageModalOpen(false);
   }
@@ -81,12 +82,13 @@ function App(props) {
             onCardClick={handleCardClick}
           />
           <Footer />
-          <PopupWithForm name='edit-profile' title='Edit profile' isOpen={isEditProfileModalOpen} onClose={closeAllModals} >
+          <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllModals} />
+          {/* <PopupWithForm name='edit-profile' title='Edit profile' isOpen={isEditProfileModalOpen} onClose={closeAllModals} >
             <input id="profile-name" type="text" className="form__input form__input_type_profile-name" defaultValue="" placeholder="Name" required minLength="2" maxLength="40" name="profileName" />
             <span id="profile-name-error" className="form__error"></span>
             <input id="profile-info" type="text" className="form__input form__input_type_profile-description" defaultValue="" placeholder="Description" required minLength="2" maxLength="200" name="profileAbout" />
             <span id="profile-info-error" className="form__error"></span>
-          </PopupWithForm>
+          </PopupWithForm> */}
           <PopupWithForm name='edit-profile-picture' title='Change profile picture' isOpen={isEditAvatarModalOpen} onClose={closeAllModals}>
             <input id="picture-url" type="url" className="form__input form__input_type_picture-link" defaultValue="" placeholder="Picture Link" name="pictureLink" required />
             <span id="picture-url-error" className="form__error"></span>
