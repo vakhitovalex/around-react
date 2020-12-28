@@ -1,4 +1,4 @@
-import React, { useRef} from 'react';
+import React, { useRef } from 'react';
 import PopupWithForm from './PopupWithForm.js';
 
 
@@ -21,7 +21,7 @@ function EditAvatarPopup(props) {
       onClose={props.onClose}
       onSubmit={handleSubmit}
     >
-      <input ref={pictureLinkRef} id="picture-url" type="url" className="form__input form__input_type_picture-link" placeholder="Picture Link" name="pictureLink" required />
+      <input ref={pictureLinkRef} defaultValue='' id="picture-url" type="url" className="form__input form__input_type_picture-link" placeholder="Picture Link" name="pictureLink" required />
       <span id="picture-url-error" className="form__error"></span>
     </PopupWithForm>
   )

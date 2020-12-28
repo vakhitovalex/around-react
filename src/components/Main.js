@@ -1,23 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
-import Api from "../utils/Api.js";
+import React, { useContext } from "react";
 import Card from "./Card.js";
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js'
 
-
-const api = new Api({
-  baseUrl: "https://around.nomoreparties.co/v1/group-6",
-  headers: {
-    authorization: "8335dbe9-1da8-4147-9f68-11c7f6c06af4",
-    "Content-Type": "application/json",
-  },
-});
-
 function Main(props) {
   const currentUser = useContext(CurrentUserContext);
-
-
-
-
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -48,13 +34,12 @@ function Main(props) {
             onClick={props.onAddPlace}
           ></button>
         </section>
-
         <section className="elements">
           {props.cards.map((card) => (
             <Card
               key={card._id}
               card={card}
-              onClick={props.onCardClilk}
+              onClick={props.onCardClick}
               onCardLike={props.onCardLike}
               onCardDelete={props.onCardDelete}
             />

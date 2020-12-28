@@ -1,25 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import Header from './Header'
-import Main from './Main'
-import Footer from './Footer'
+import Header from './Header';
+import Main from './Main';
+import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
-import EditProfilePopup from './EditProfilePopup'
-import EditAvatarPopup from './EditAvatarPopup'
-import Api from "../utils/Api";
+import EditProfilePopup from './EditProfilePopup';
+import EditAvatarPopup from './EditAvatarPopup';
+import Api from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import AddPlacePopup from './AddPlacePopup';
 
 const api = new Api({
-  baseUrl: "https://around.nomoreparties.co/v1/group-6",
+  baseUrl: 'https://around.nomoreparties.co/v1/group-6',
   headers: {
-    authorization: "8335dbe9-1da8-4147-9f68-11c7f6c06af4",
-    "Content-Type": "application/json",
+    authorization: '8335dbe9-1da8-4147-9f68-11c7f6c06af4',
+    'Content-Type': 'application/json',
   },
 });
 
 function App(props) {
   const [currentUser, setCurrentUser] = useState('');
   const [cards, setCards] = useState([]);
+  const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
+  const [isAddPlaceModalOpen, setAddPlaceModalOpen] = useState(false);
+  const [isEditAvatarModalOpen, setEditAvatarModalOpen] = useState(false);
+  const [{ cardName, cardImage }, setCardData] = useState({});
+  const [isImageModalOpen, setImageModalOpen] = useState(false);
+
+  function requestUserInfo() {
+    api
+      .getUserInfo()
+      .then((res) => {
+        setCurrentUser(res);
+      })
+      .catch((err) => {
+        console.log(err + ' in user api request');
+      });
+  }
+
+  useEffect(() => {
+    requestUserInfo();
+  }, []);
 
   function requestCards() {
     api
@@ -28,7 +49,7 @@ function App(props) {
         setCards(res);
       })
       .catch((err) => {
-        console.log(err + " in cards request");
+        console.log(err + ' in cards request');
       });
   }
 
@@ -38,52 +59,36 @@ function App(props) {
 
   function handleCardLike(card) {
     // Check one more time if this card was already liked
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
-
+    const isLiked = card.likes.some((i) => i._id === currentUser._id);
     // Send a request to the API and getting the updated card data
     api.changeLikeStatus(card._id, !isLiked)
       .then((newCard) => {
         // Create a new array based on the existing one and putting a new card into it
-        const newCards = cards.map((item) => item._id === card._id ? newCard : item);
+        const newCards = cards.map((item) =>
+          item._id === card._id ? newCard : item
+        );
         // Update the state
         setCards(newCards);
+      })
+      .catch((err) => {
+        console.log(err + ' in like api request');
       });
   }
 
   function handleCardDelete(card) {
     api.deleteCard(card._id)
       .then(() => {
-        const arrayWithoutDeletedCard = cards.filter((item) => item._id !== card._id);
+        const arrayWithoutDeletedCard = cards.filter(
+          (item) => item._id !== card._id
+        );
         setCards(arrayWithoutDeletedCard);
       })
-  }
-
-
-
-  function requestUserInfo() {
-    api
-      .getUserInfo()
-      .then((res) => {
-        setCurrentUser(res);
-        // setUserName(res.name);
-        // setUserDescritpion(res.about);
-        // setUserAvatar(res.avatar);
-        // setUserId(res._id);
-      })
       .catch((err) => {
-        console.log(err + " in user api request");
-      })
+        console.log(err + ' in delete api request');
+      });
   }
 
-  useEffect(() => {
-    requestUserInfo();
-  }, []);
 
-  const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
-  const [isAddPlaceModalOpen, setAddPlaceModalOpen] = useState(false);
-  const [isEditAvatarModalOpen, setEditAvatarModalOpen] = useState(false);
-  const [{ cardName, cardImage }, setCardData] = useState({});
-  const [isImageModalOpen, setImageModalOpen] = useState(false);
 
   function handleCardClick(cardName, cardImage) {
     setImageModalOpen(true);
@@ -110,21 +115,41 @@ function App(props) {
   }
 
   function handleUpdateUser({ name, about }) {
-    api.updateUserInfo({ name, about })
+    api
+      .updateUserInfo({ name, about })
       .then((res) => setCurrentUser(res))
+      .catch((err) => {
+        console.log(err + ' in user api request');
+      })
       .then(() => closeAllModals());
   }
 
   function handleUpdateAvatar(link) {
-    api.updateUserPicture(link)
+    api
+      .updateUserPicture(link)
       .then((res) => setCurrentUser(res))
+      .catch((err) => {
+        console.log(err + ' in user avatar api request');
+      })
+      .then(() => closeAllModals());
+  }
+
+  function handleAddPlaceSubmit({ name, link }) {
+    api
+      .addNewCard({
+        name,
+        link,
+      })
+      .then((newCard) => setCards([newCard, ...cards]))
+      .catch((err) => {
+        console.log(err + ' in add card api request');
+      })
       .then(() => closeAllModals());
   }
 
   return (
-
-    <div className="page">
-      <div className="page__container">
+    <div className='page'>
+      <div className='page__container'>
         <CurrentUserContext.Provider value={currentUser}>
           <Header />
           <Main
@@ -137,20 +162,25 @@ function App(props) {
             cards={cards}
           />
           <Footer />
-          <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllModals} onUpdateUser={handleUpdateUser} />
-          <EditAvatarPopup isOpen={isEditAvatarModalOpen} onClose={closeAllModals} onUpdateAvatar={handleUpdateAvatar} />
-          {/* <PopupWithForm name='edit-profile-picture' title='Change profile picture' isOpen={isEditAvatarModalOpen} onClose={closeAllModals}>
-            <input id="picture-url" type="url" className="form__input form__input_type_picture-link" defaultValue="" placeholder="Picture Link" name="pictureLink" required />
-            <span id="picture-url-error" className="form__error"></span>
-          </PopupWithForm> */}
-          <PopupWithForm name='add-place' title='New place' isOpen={isAddPlaceModalOpen} onClose={closeAllModals}>
-            <input id="place-title" type="text" className="form__input form__input_type_place-title" defaultValue="" placeholder="Title" minLength="1" maxLength="30" name="placeTitle" required />
-            <span id="place-title-error" className="form__error"></span>
-            <input id="place-url" type="url" className="form__input form__input_type_place-link" defaultValue="" placeholder="Image Link" name="placeLink" required />
-            <span id="place-url-error" className="form__error"></span>
-          </PopupWithForm>
-          <PopupWithForm name='delete-place' title='Are you sure?'>
-          </PopupWithForm>
+          <EditProfilePopup
+            isOpen={isEditProfilePopupOpen}
+            onClose={closeAllModals}
+            onUpdateUser={handleUpdateUser}
+          />
+          <EditAvatarPopup
+            isOpen={isEditAvatarModalOpen}
+            onClose={closeAllModals}
+            onUpdateAvatar={handleUpdateAvatar}
+          />
+          <AddPlacePopup
+            isOpen={isAddPlaceModalOpen}
+            onClose={closeAllModals}
+            onAddPlace={handleAddPlaceSubmit}
+          />
+          <PopupWithForm
+            name='delete-place'
+            title='Are you sure?'
+          ></PopupWithForm>
           <ImagePopup
             isOpen={isImageModalOpen}
             imageUrl={cardImage}
