@@ -69,6 +69,12 @@ function App(props) {
     setImageModalOpen(false);
   }
 
+  function handleUpdateUser({ name, about }) {
+    api.updateUserInfo({ name, about })
+      .then((res) => setCurrentUser(res))
+      .then(() => closeAllModals());
+  }
+
   return (
 
     <div className="page">
@@ -82,7 +88,7 @@ function App(props) {
             onCardClick={handleCardClick}
           />
           <Footer />
-          <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllModals} />
+          <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllModals} onUpdateUser={handleUpdateUser} />
           {/* <PopupWithForm name='edit-profile' title='Edit profile' isOpen={isEditProfileModalOpen} onClose={closeAllModals} >
             <input id="profile-name" type="text" className="form__input form__input_type_profile-name" defaultValue="" placeholder="Name" required minLength="2" maxLength="40" name="profileName" />
             <span id="profile-name-error" className="form__error"></span>
