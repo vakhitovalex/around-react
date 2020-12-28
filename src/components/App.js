@@ -6,17 +6,9 @@ import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
-import Api from '../utils/Api';
+import api from '../utils/api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import AddPlacePopup from './AddPlacePopup';
-
-const api = new Api({
-  baseUrl: 'https://around.nomoreparties.co/v1/group-6',
-  headers: {
-    authorization: '8335dbe9-1da8-4147-9f68-11c7f6c06af4',
-    'Content-Type': 'application/json',
-  },
-});
 
 function App(props) {
   const [currentUser, setCurrentUser] = useState('');
